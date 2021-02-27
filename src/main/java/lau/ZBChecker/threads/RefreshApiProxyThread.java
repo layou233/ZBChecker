@@ -9,17 +9,19 @@ import org.apache.commons.logging.LogFactory;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static org.fusesource.jansi.Ansi.ansi;
+
 public class RefreshApiProxyThread extends Thread {
+    protected transient static Log log = LogFactory.getLog("RefreshApiProxyThread");
     public static void loadProxyFromApi() {
-        Log log = LogFactory.getLog("RefreshApiProxyThread");
         try {
             Main.proxyList = Arrays.asList(Get.get(Main.config.proxyApi, null, null).trim().replace("\r\n", "\n").replace("\r", "\n").split("\n"));
         } catch (IOException e) {
             e.printStackTrace();
-            log.error("Fail to load proxies from API. Please restart.");
+            log.error(ansi().render("@|red Fail to load proxies from API. Please restart.|@"));
             System.exit(0);
         }
-        log.info("Successfully loaded " + Main.proxyList.size() + " proxies.\n");
+        log.warn(ansi().render("@|green Successfully loaded " + Main.proxyList.size() + " proxies |@@|cyan from API.|@"));
     }
 
     @Override

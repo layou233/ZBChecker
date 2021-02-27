@@ -23,8 +23,8 @@ public class Main {
     public static boolean isCloudMode = false;
     public static transient Log log = LogFactory.getLog("Main");
     public static long totalTriedTimes = 0;
-    public static List<String> proxyList = new ArrayList<String>();
-    public static List<String> comboList = new ArrayList<String>();
+    public static List<String> proxyList = new ArrayList<>();
+    public static List<String> comboList = new ArrayList<>();
     public static Counter counter = new Counter();
     public static String fileFolderName = "./results/" + (new Date()).toString().replace(':', '-');
     public static int totalThreads = 0;
@@ -41,6 +41,7 @@ public class Main {
                 " / /__  | |_| | | |___  | | | | | |___  | |___  | | \\ \\  | |___  | | \\ \\ \n" +
                 "/_____| |_____/ \\_____| |_| |_| |_____| \\_____| |_|  \\_\\ |_____| |_|  \\_\\|@ \n" +
                 "@|yellow By Github@layou233|@\n"));
+        UpdateCheck.updateCheck();
         config.loadConfig();
         String text = LoadFileResource.loadFile("combos.txt");
         if (!Objects.equals(text, "")) isCloudMode = true;
@@ -60,8 +61,8 @@ public class Main {
                     log.fatal(config.proxyFile.getName() + " is not found. Please recheck your proxy file name!");
                     System.exit(0);
                 }
+                System.out.println(ansi().render("@|green Successfully loaded " + Main.proxyList.size() + " proxies.|@"));
             }
-            System.out.println(ansi().render("@|green Successfully loaded " + Main.proxyList.size() + " proxies.|@"));
 
             // Load combos
             try {
@@ -71,7 +72,7 @@ public class Main {
                 log.fatal(config.comboFile.getName() + " is not found. Please recheck your combo file name!");
                 System.exit(0);
             }
-            System.out.println(ansi().render("@|green Successfully loaded " + comboList.size() + " combos.|@\n"));
+            log.warn(ansi().render("@|green Successfully loaded " + comboList.size() + " combos.|@\n"));
 
             // Judge if there is no proxy/combo
             if (comboList.size() == 0) {
