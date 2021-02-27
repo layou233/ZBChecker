@@ -11,10 +11,7 @@ import org.fusesource.jansi.AnsiConsole;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -43,11 +40,18 @@ public class Main {
                 "@|yellow By Github@layou233|@\n"));
         UpdateCheck.updateCheck();
         config.loadConfig();
-        String text = LoadFileResource.loadFile("combos.txt");
+        String text = LoadFileResource.loadFile("combos.txt").trim();
         if (!Objects.equals(text, "")) isCloudMode = true;
 
         //TODO(Cloud Mode)
         if (isCloudMode) {
+            log.warn("Oh, you are using cloud mode!!!");
+            // Load proxies
+            RefreshApiProxyThread.loadProxyFromApi();
+            (new RefreshApiProxyThread()).start();
+
+            // Load combos
+            comboList = Arrays.asList(text.replace("\r\n", "\n").replace('\r', '\n').split("\n"));
         } else {
             // Load proxies
             if (config.useProxyApi) {
@@ -72,48 +76,48 @@ public class Main {
                 log.fatal(config.comboFile.getName() + " is not found. Please recheck your combo file name!");
                 System.exit(0);
             }
-            log.warn(ansi().render("@|green Successfully loaded " + comboList.size() + " combos.|@\n"));
-
-            // Judge if there is no proxy/combo
-            if (comboList.size() == 0) {
-                log.fatal("Wait, but there is no combo to check in your file?\nPlease recheck your combo file.");
-                System.exit(0);
-            }
-            if (proxyList.size() == 0) {
-                log.fatal("Wait, but there is no proxy to use in your file?\nPlease recheck your proxy file.");
-                System.exit(0);
-            }
-
-            (new File(fileFolderName)).mkdirs();
-            log.warn(ansi().render("@|red Preparing finished. Now starting checking threads...|@\n"));
-
-            CPMCalculatorThread cpmThread = new CPMCalculatorThread();
-            cpmThread.start();
-            Windows.refreshTitle();
-            for (String anCombo : comboList) {
-                if (anCombo.trim().equals("")) break;
-                while (totalThreads >= config.threads) ;
-                (new CheckThread(new Account(anCombo.trim()))).start();
-                totalThreads++;
-            }
-            while (counter.checked < comboList.size()) ;
-            try {
-                cpmThread.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.println("\n@|bg_red ==============="
-                    + "\nALL WORKS FINISHED|@"
-                    + "\n@|cyan Total: " + counter.checked
-                    + "\n@|green Hits: " + counter.hits
-                    + "\n@|green +NFA: " + counter.nfa
-                    + "\n@|green +SFA: " + counter.sfa
-                    + "\n@|magenta HypixelHighLevel: " + counter.hypixelLeveled
-                    + "\n@|magenta HypixelRanked: " + counter.hypixelRanked
-                    + "\n@|magenta Optifine Cape: " + counter.optifine
-                    + "\n@|magenta Mojang Cape: " + counter.mojangCape
-                    + "\n@|blue Demo: " + counter.demo
-                    + "\n@|yellow Thanks for using! ZBChecker, made by Github@layou233.|@");
         }
+        log.warn(ansi().render("@|green Successfully loaded " + comboList.size() + " combos.|@\n"));
+
+        // Judge if there is no proxy/combo
+        if (comboList.size() == 0) {
+            log.fatal("Wait, but there is no combo to check in your file?\nPlease recheck your combo file.");
+            System.exit(0);
+        }
+        if (proxyList.size() == 0) {
+            log.fatal("Wait, but there is no proxy to use in your file?\nPlease recheck your proxy file.");
+            System.exit(0);
+        }
+
+        (new File(fileFolderName)).mkdirs();
+        log.warn(ansi().render("@|red Preparing finished. Now starting checking threads...|@\n"));
+
+        CPMCalculatorThread cpmThread = new CPMCalculatorThread();
+        cpmThread.start();
+        Windows.refreshTitle();
+        for (String anCombo : comboList) {
+            if (anCombo.trim().equals("")) break;
+            while (totalThreads >= config.threads) ;
+            (new CheckThread(new Account(anCombo.trim()))).start();
+            totalThreads++;
+        }
+        while (counter.checked < comboList.size()) ;
+        try {
+            cpmThread.wait();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("\n@|bg_red ==============="
+                + "\nALL WORKS FINISHED|@"
+                + "\n@|cyan Total: " + counter.checked
+                + "\n@|green Hits: " + counter.hits
+                + "\n@|green +NFA: " + counter.nfa
+                + "\n@|green +SFA: " + counter.sfa
+                + "\n@|magenta HypixelHighLevel: " + counter.hypixelLeveled
+                + "\n@|magenta HypixelRanked: " + counter.hypixelRanked
+                + "\n@|magenta Optifine Cape: " + counter.optifine
+                + "\n@|magenta Mojang Cape: " + counter.mojangCape
+                + "\n@|blue Demo: " + counter.demo
+                + "\n@|yellow Thanks for using! ZBChecker, made by Github@layou233.|@");
     }
 }
