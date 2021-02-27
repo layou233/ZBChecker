@@ -1,0 +1,47 @@
+package lau.ZBChecker.utils;
+
+import lau.ZBChecker.Main;
+
+import java.text.MessageFormat;
+
+public class Colors {
+    public static String CLEAN = "\033[0m";
+
+    public final static String UNDERLINE = "4m";
+    public final static String INVERT = "7m";
+
+    public final static String GREY(String style) {
+        if (Main.config.isColorful) return MessageFormat.format("\u001B[90;{0}", (style != null) ? style : "1m");
+        return "";
+    }
+
+    public final static String RED(String style) {
+        if (Main.config.isColorful) return MessageFormat.format("\u001B[91;{0}", (style != null) ? style : "1m");
+        return "";
+    }
+
+    public final static String GREEN(String style) {
+        if (Main.config.isColorful) return MessageFormat.format("\u001B[92;{0}", (style != null) ? style : "1m");
+        return "";
+    }
+
+    public final static String YELLOW(String style) {
+        if (Main.config.isColorful) return MessageFormat.format("\u001B[93;{0}", (style != null) ? style : "1m");
+        return "";
+    }
+
+    public final static String BLUE(String style) {
+        if (Main.config.isColorful) return MessageFormat.format("\u001B[94;{0}", (style != null) ? style : "1m");
+        return "";
+    }
+
+    public final static String PRUPLE(String style) {
+        if (Main.config.isColorful) return MessageFormat.format("\u001B[95;{0}", (style != null) ? style : "1m");
+        return "";
+    }
+
+    public final static String AZURE(String style) {
+        if (Main.config.isColorful) return MessageFormat.format("\u001B[96;{0}", (style != null) ? style : "1m");
+        return "";
+    }
+}

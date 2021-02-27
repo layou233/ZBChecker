@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'lau'
+version '0.1'
+mainClassName = 'lau.ZBChecker.Main'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.apache.httpcomponents:httpclient:4.5.13'
+    compile 'net.java.dev.jna:jna:5.7.0'
+    compile 'org.fusesource.jansi:jansi:2.3.1'
+    //testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    //testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        manifestContentCharset 'utf-8'
+        metadataCharset 'utf-8'
+        attributes 'Main-Class': mainClassName
+    }
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+}
