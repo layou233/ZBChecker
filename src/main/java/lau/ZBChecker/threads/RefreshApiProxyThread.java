@@ -13,13 +13,13 @@ import static org.fusesource.jansi.Ansi.ansi;
 
 public class RefreshApiProxyThread extends Thread {
     protected transient static Log log = LogFactory.getLog("RefreshApiProxyThread");
+
     public static void loadProxyFromApi() {
         try {
             Main.proxyList = Arrays.asList(Get.get(Main.config.proxyApi, null, null).trim().replace("\r\n", "\n").replace("\r", "\n").split("\n"));
         } catch (IOException e) {
             e.printStackTrace();
             log.error(ansi().render("@|red Fail to load proxies from API. Please restart.|@"));
-            System.exit(0);
         }
         log.warn(ansi().render("@|green Successfully loaded " + Main.proxyList.size() + " proxies |@@|cyan from API.|@"));
     }
