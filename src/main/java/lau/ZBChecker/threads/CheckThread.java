@@ -154,7 +154,7 @@ public class CheckThread extends Thread {
             saveResult(new File(Main.fileFolderName + "/demo.txt"),
                     "[DEMO]" + account.originalCombo);
             log.warn(ansi().render("@|blue [DEMO] " + account.originalCombo + "|@"));
-        } else log.warn(ansi().render("@|red [BAD] " + account.originalCombo + "|@"));
+        } else if (Main.config.printBad) log.warn(ansi().render("@|red [BAD] " + account.originalCombo + "|@"));
         Main.counter.checked++;
         Main.totalThreads--;
         //Main.comboList.notify();

@@ -21,6 +21,8 @@ public class Config {
     public int threads;
     public int connectionTimeout;
     public int recheckTimes;
+    public boolean printBad;
+    public boolean logStatus;
     public boolean check_optifine;
     public boolean check_mojangCape;
     public boolean check_hypixelInfo;
@@ -92,6 +94,8 @@ public class Config {
                 this.threads = Integer.parseInt(readConfig(text, "threads="));
                 this.connectionTimeout = Integer.parseInt(readConfig(text, "connectionTimeout="));
                 this.recheckTimes = Integer.parseInt(readConfig(text, "recheckTimes="));
+                this.printBad = parseBoolean(readConfig(text, "printBad="));
+                this.logStatus = parseBoolean(readConfig(text, "logStatus="));
                 this.check_optifine = parseBoolean(readConfig(text, "optifine="));
                 this.check_mojangCape = parseBoolean(readConfig(text, "mojangCape="));
                 this.check_hypixelInfo = parseBoolean(readConfig(text, "hypixelInfo="));

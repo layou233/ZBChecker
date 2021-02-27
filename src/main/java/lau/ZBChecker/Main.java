@@ -3,6 +3,7 @@ package lau.ZBChecker;
 import lau.ZBChecker.threads.CPMCalculatorThread;
 import lau.ZBChecker.threads.CheckThread;
 import lau.ZBChecker.threads.RefreshApiProxyThread;
+import lau.ZBChecker.threads.StatusLogThread;
 import lau.ZBChecker.utils.LoadAsList;
 import lau.ZBChecker.utils.LoadFileResource;
 import org.apache.commons.logging.Log;
@@ -46,6 +47,10 @@ public class Main {
         //TODO(Cloud Mode)
         if (isCloudMode) {
             log.warn("Oh, you are using cloud mode!!!");
+            // Set printBad to false
+            config.printBad = false;
+            config.logStatus = true;
+
             // Load proxies
             RefreshApiProxyThread.loadProxyFromApi();
             (new RefreshApiProxyThread()).start();
@@ -95,18 +100,32 @@ public class Main {
         CPMCalculatorThread cpmThread = new CPMCalculatorThread();
         cpmThread.start();
         Windows.refreshTitle();
+        StatusLogThread statusThread = null; // Saving 1 KB of memory is also a saving of memory XD
+        if (Main.config.logStatus) {
+            statusThread = new StatusLogThread();
+            statusThread.start();
+        }
         for (String anCombo : comboList) {
             if (anCombo.trim().equals("")) break;
             while (totalThreads >= config.threads) ;
             (new CheckThread(new Account(anCombo.trim()))).start();
             totalThreads++;
         }
+
         while (counter.checked < comboList.size()) ;
+
+        // Stop function threads
         try {
             cpmThread.wait();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        try {
+            statusThread.wait();
+        } catch (Exception ignored) { // Actually I don’t want to deal with these unnecessary errors anymore
+        }
+
+        // Final print
         System.out.println("\n@|bg_red ==============="
                 + "\nALL WORKS FINISHED|@"
                 + "\n@|cyan Total: " + counter.checked
