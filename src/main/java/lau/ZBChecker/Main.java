@@ -70,7 +70,7 @@ public class Main {
                     log.fatal(config.proxyFile.getName() + " is not found. Please recheck your proxy file name!");
                     System.exit(0);
                 }
-                System.out.println(ansi().render("@|green Successfully loaded " + Main.proxyList.size() + " proxies.|@"));
+                log.warn(ansi().render("@|green Successfully loaded " + Main.proxyList.size() + " proxies.|@"));
             }
 
             // Load combos
